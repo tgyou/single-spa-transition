@@ -1,5 +1,5 @@
 import './style.css';
-import { getAppStatus, MOUNTED, NOT_MOUNTED } from 'single-spa';
+import singleSpa, { getAppStatus, MOUNTED, NOT_MOUNTED } from 'single-spa';
 
 const DEFAULT_DURATION = 600; // ms
 
@@ -11,9 +11,29 @@ class TransitionSingleSpa {
   constructor(duration?:number) {
     if (duration) this.duration = duration;
     this.listenSpaEvent();
+    this.addRootClassname();
+    this.checkAlreadyMounted();
   }
 
-  listenSpaEvent() {
+  private addRootClassname() {
+    if (!document.body.classList.contains('spa-transition')) {
+      document.body.classList.add('spa-transition');
+    }
+  }
+
+  private checkAlreadyMounted() {
+    const wrappers = document.querySelectorAll('[id^="single-spa-application:"]:not([class]):not([data-cloned])');
+    if (!this.firstMount || !wrappers.length) return;
+    Array.from(wrappers).map((wrapper: HTMLDivElement) => {
+      const [, appName] = wrapper.getAttribute('id').split(':');
+      if (getAppStatus(appName) === MOUNTED) {
+        wrapper.classList.add('active');
+        this.firstMount = false;
+      }
+    })
+  }
+
+  private listenSpaEvent() {
     window.addEventListener('single-spa:before-app-change', (event: any) => {
       Object.keys(event.detail.newAppStatuses).map(appName => {
         if (event.detail.newAppStatuses[appName] === NOT_MOUNTED)
@@ -29,7 +49,7 @@ class TransitionSingleSpa {
     });
   }
 
-  getDirection(event?:any) { 
+  private getDirection(event?:any) { 
     let direction = 'popstate';
   
     if (window.history.state?.trigger) {
@@ -45,7 +65,7 @@ class TransitionSingleSpa {
   }
   
 
-  transitionHandler(event, appName: string, action: 'enter' | 'exit') {
+  private transitionHandler(event, appName: string, action: 'enter' | 'exit') {
     const direction = this.getDirection(event);
   
     let wrapper = document.querySelector(`[id$="${appName}"]:not([data-cloned])`) as HTMLDivElement;
@@ -61,12 +81,14 @@ class TransitionSingleSpa {
   
     // when if action is `exit`. clone the element.
     if (action === 'exit') {
-      const { parentNode } = wrapper;
       originWrapper = wrapper;
       wrapper.removeAttribute('class');
+      
       wrapper = wrapper.cloneNode(true) as HTMLDivElement;
+      wrapper.setAttribute('id', `${wrapper.getAttribute('id')}:exit`);
       wrapper.setAttribute('data-cloned', '1');
-      parentNode.appendChild(wrapper);
+
+      originWrapper.insertAdjacentElement('afterend', wrapper);
     }
   
     // set position next page position by current page.
@@ -106,7 +128,7 @@ class TransitionSingleSpa {
       setTimeout(() => {
         if (action === 'exit') {
           // when if action is `exit`, remove cloned element.
-          wrapper.parentNode.removeChild(wrapper);
+          wrapper.parentNode?.removeChild(wrapper);
           return;
         }
   
