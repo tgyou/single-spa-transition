@@ -2,7 +2,14 @@
   "extends": "ts-config-single-spa",
   "files": ["src/styx-single-spa-transition.ts"],
   "compilerOptions": {
-    "declarationDir": "dist"
+    "declarationDir": "dist",
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "jsx": "react-jsx",
   },
   "include": ["src/**/*"],
   "exclude": ["src/**/*.test*"]
