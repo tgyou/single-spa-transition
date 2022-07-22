@@ -1,22 +1,29 @@
 import './style.css';
 import singleSpa, { getAppStatus, MOUNTED, NOT_MOUNTED } from 'single-spa';
 
-const DEFAULT_DURATION = 600; // ms
-
+const DEFAULT_DURATION = 500; // ms
+const DEFAULT_DELAY = 100; // ms
 class TransitionSingleSpa {
-  private firstMount = true;
-  private historyState = null;
-  private duration = DEFAULT_DURATION;
+  private firstMount: boolean = true;
+  private historyState: any = null;
+  private duration: number = DEFAULT_DURATION;
+  private delay: number = DEFAULT_DELAY;
+  private scrollStates: any = {};
 
-  constructor(duration?:number) {
-    if (duration) this.duration = duration;
+  constructor(duration?:number, delay?: number) {
+    if (duration !== undefined && duration > -1) this.duration = duration;
+    if (delay !== undefined && delay > -1) this.delay = delay;
     this.listenSpaEvent();
     this.addRootClassname();
     this.checkAlreadyMounted();
   }
 
+  get timeout() {
+    return this.duration + this.delay;
+  }
+
   private addRootClassname() {
-    if (!document.body.classList.contains('spa-transition')) {
+    if (!document.body.classList.contains('spa-transition') && this.duration) {
       document.body.classList.add('spa-transition');
     }
   }
