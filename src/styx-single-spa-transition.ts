@@ -75,7 +75,7 @@ class TransitionSingleSpa {
   private transitionHandler(event, appName: string, action: 'enter' | 'exit') {
     const direction = this.getDirection(event);
   
-    let wrapper = document.querySelector(`[id$="${appName}"]:not([data-cloned])`) as HTMLDivElement;
+    let wrapper = document.querySelector(`[id$="${appName}"]`) as HTMLDivElement;
     if (!wrapper) return;
     let originWrapper;
   
@@ -93,7 +93,6 @@ class TransitionSingleSpa {
       
       wrapper = wrapper.cloneNode(true) as HTMLDivElement;
       wrapper.setAttribute('id', `${wrapper.getAttribute('id')}:exit`);
-      wrapper.setAttribute('data-cloned', '1');
 
       originWrapper.insertAdjacentElement('afterend', wrapper);
     }
@@ -107,16 +106,15 @@ class TransitionSingleSpa {
   
     // save `scrollTop`
     if (direction === 'push' && action === 'exit') {
-      const scrollTop = document.documentElement.scrollTop;
-      originWrapper.setAttribute('data-pop-scroll', scrollTop);
+      this.scrollStates[appName] = document.documentElement.scrollTop;
     }
   
     // restore `scrollTop` by saved.
     if (direction === 'pop' && action === 'enter') {
-      const scrollTop = parseInt(wrapper.getAttribute('data-pop-scroll') || '0', 0);
+      const scrollTop = this.scrollStates[appName] || 0;
       if (scrollTop) {
         document.documentElement.scrollTop = scrollTop;
-        wrapper.removeAttribute('data-pop-scroll');
+        delete this.scrollStates[appName];
       }
     }
   
@@ -151,7 +149,7 @@ class TransitionSingleSpa {
         if (getAppStatus(appName) === MOUNTED) {
           wrapper.classList.add('active');
         }
-      }, this.duration);
+      }, this.timeout);
     })
   }
 }
