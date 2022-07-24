@@ -1,9 +1,9 @@
 {
-  "name": "@styx/single-spa-transition",
+  "name": "single-spa-transition",
   "version": "1.0.0",
-  "description": "Support transition for single-spa root-config",
+  "description": "App transition for single-spa root-config",
   "author": {
-    "email": "tgyou@me.com",
+    "email": "taegyu@gmail.com",
     "name": "Taegyu Yoo"
   },
   "repository": {
