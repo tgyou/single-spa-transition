@@ -18,15 +18,17 @@ code {
 
 .spa-transition [id^="single-spa-application:"]:not([class]) {
   visibility: hidden;
+  position: absolute;
 }
 
 .spa-transition [id^="single-spa-application:"].enter,
 .spa-transition [id^="single-spa-application:"].exit {
   position: fixed;
-  top: 0;
-  background-color: #fff;
-  width: 100vw;
-  height: 100vh;
+  background-color: var(--spa-transition-background-color, #fff);
+  top: var(--spa-transition-top, 0);
+  left: var(--spa-transition-left, 0);
+  width: var(--spa-transition-width, 100vw);
+  height: var(--spa-transition-height, 100vh);
 }
 
 /* push */
@@ -38,7 +40,7 @@ code {
 
 .spa-transition [id^="single-spa-application:"].enter-active,
 .spa-transition [id^="single-spa-application:"].exit-active {
-  transition: transform cubic-bezier(0.1, 0.7, 0.1, 1) 500ms 100ms, box-shadow cubic-bezier(0.1, 0.7, 0.1, 1) 500ms 100ms;
+  transition: transform cubic-bezier(0.1, 0.7, 0.1, 1) var(--spa-transition-duration, 500ms) var(--spa-transition-delay, 100ms), box-shadow cubic-bezier(0.1, 0.7, 0.1, 1) var(--spa-transition-duration, 500ms) var(--spa-transition-delay, 100ms);
 }
 
 .spa-transition [id^="single-spa-application:"].push.enter {
