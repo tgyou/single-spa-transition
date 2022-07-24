@@ -1,5 +1,18 @@
 {
   "name": "@styx/single-spa-transition",
+  "version": "1.0.0",
+  "description": "Support transition for single-spa root-config",
+  "author": {
+    "email": "tgyou@me.com",
+    "name": "Taegyu Yoo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/styx/single-spa-transition"
+  },
+  "license": "MIT",
+  "main": "dist/styx-single-spa-transition.js",
+  "types": "dist/styx-single-spa-transition.d.ts",
   "scripts": {
     "start": "webpack serve",
     "start:standalone": "webpack serve --env standalone",
@@ -48,6 +61,5 @@
     "@types/systemjs": "^6.1.1",
     "@types/webpack-env": "^1.16.2",
     "single-spa": "^5.9.3"
-  },
-  "types": "dist/styx-single-spa-transition.d.ts"
+  }
 }
