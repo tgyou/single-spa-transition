@@ -4,7 +4,7 @@ import { addErrorHandler, getAppStatus, LOAD_ERROR, MOUNTED, NOT_MOUNTED, SKIP_B
 const DEFAULT_DURATION = 500; // ms
 const DEFAULT_DELAY = 100; // ms
 
-interface TransitionSingleSpaStyle {
+interface SingleSpaTransitionStyle {
   width?: number | string;
   height?: number | string;
   left?: number | string;
@@ -12,18 +12,18 @@ interface TransitionSingleSpaStyle {
   backgroundColor?: string;
 }
 
-interface TransitionSingleSpaOptions {
+interface SingleSpaTransitionOptions {
   duration?: number;
   delay?: number;
-  style?: TransitionSingleSpaStyle;
+  style?: SingleSpaTransitionStyle;
   unmountAfterMount?: boolean;
 }
 
-class TransitionSingleSpa {
+class SingleSpaTransition {
   // options
   private _duration: number = DEFAULT_DURATION;
   private _delay: number = DEFAULT_DELAY;
-  private _style: TransitionSingleSpaStyle = {};
+  private _style: SingleSpaTransitionStyle = {};
   private unmountAfterMount: boolean = false;
   
   // internal state
@@ -32,7 +32,7 @@ class TransitionSingleSpa {
   private scrollStates: any = {};
   private unmountCallback: Function | null = null;
 
-  constructor(options?: TransitionSingleSpaOptions) {
+  constructor(options?: SingleSpaTransitionOptions) {
     if (typeof window === undefined) return;
 
     if (options?.duration > -1) this._duration = options.duration;
@@ -72,7 +72,7 @@ class TransitionSingleSpa {
     return this._delay;
   }
 
-  public set style(style: TransitionSingleSpaStyle) {
+  public set style(style: SingleSpaTransitionStyle) {
     this._style = style;
     this.updateGlobalStyleSheet();
   }
@@ -305,4 +305,4 @@ class TransitionSingleSpa {
   }
 }
 
-export default TransitionSingleSpa;
+export default SingleSpaTransition;
