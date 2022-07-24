@@ -8,8 +8,7 @@
       "dom",
       "dom.iterable",
       "esnext"
-    ],
-    "jsx": "react-jsx",
+    ]
   },
   "include": ["src/**/*"],
   "exclude": ["src/**/*.test*"]
