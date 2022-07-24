@@ -1,12 +1,4 @@
 {
   "extends": ["ts-important-stuff", "plugin:prettier/recommended"],
-  "parser": "@babel/eslint-parser",
-  "plugins": ["prettier"],
-  "rules": {
-    "prettier/prettier": ["error"],
-    "linebreak-style": ["error", "unix"],
-    "prefer-const": "error",
-    "no-var": "error",
-    "no-console": "warn"
-  }
+  "parser": "@babel/eslint-parser"
 }
