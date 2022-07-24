@@ -25,7 +25,7 @@ class SingleSpaTransition {
   private _delay: number = DEFAULT_DELAY;
   private _style: SingleSpaTransitionStyle = {};
   private unmountAfterMount: boolean = false;
-  
+
   // internal state
   private firstMount: boolean = true;
   private historyState: any = null;
@@ -39,12 +39,12 @@ class SingleSpaTransition {
     if (options?.delay > -1) this._delay = options.delay;
     if (options?.style) this._style = options.style;
     if (options?.unmountAfterMount !== undefined) this.unmountAfterMount = options.unmountAfterMount;
-  
+
     this.listenSpaEvent();
     this.checkAlreadyMounted();
     this.createGlobalStyleSheet();
 
-    const win = (window as any);
+    const win = window as any;
     if (win.singleSpaTransition) {
       console.warn('`single-spa-transition` is already declared. cannot duplicate declaration.');
     } else {
@@ -90,10 +90,10 @@ class SingleSpaTransition {
       `--spa-transition-duration: ${this._duration}ms;`,
       `--spa-transition-delay: ${this._delay}ms;`,
       ...Object.keys(this._style).map(key => {
-        const k = key.replace(/[A-Z]/g, m => "-" + m.toLowerCase());
+        const k = key.replace(/[A-Z]/g, m => '-' + m.toLowerCase());
         const v = typeof this._style[key] === 'number' ? this._style[key] + 'px' : this._style[key];
         return `--spa-transition-${k}: ${v};`;
-      })
+      }),
     ];
 
     if (!this._style.top) {
@@ -150,43 +150,42 @@ class SingleSpaTransition {
     window.addEventListener('single-spa:before-app-change', (event: any) => {
       Object.keys(event.detail.newAppStatuses).map(appName => {
         if (event.detail.newAppStatuses[appName] === NOT_MOUNTED)
-          this.unmountCallback = this.transitionHandler(event, appName, 'exit'); 
+          this.unmountCallback = this.transitionHandler(event, appName, 'exit');
       });
     });
-    
+
     window.addEventListener('single-spa:app-change', (event: any) => {
       Object.keys(event.detail.newAppStatuses).map(appName => {
         if ([MOUNTED, LOAD_ERROR, SKIP_BECAUSE_BROKEN].includes(event.detail.newAppStatuses[appName]))
           this.transitionHandler(event, appName, 'enter');
-      })
+      });
     });
 
     return this;
   }
 
-  private getDirection(event?:any) { 
+  private getDirection(event?: any) {
     let direction = 'popstate';
-  
+
     if (window.history.state?.trigger) {
-      direction = window.history.state?.trigger
+      direction = window.history.state?.trigger;
     } else if (event?.detail?.originalEvent?.singleSpaTrigger) {
-      direction = event?.detail?.originalEvent?.singleSpaTrigger
+      direction = event?.detail?.originalEvent?.singleSpaTrigger;
     } else if (direction === 'popstate' && this.historyState?.trigger === 'popstate') {
       direction = 'pushstate';
     }
-  
-    setTimeout(() => this.historyState = window.history.state, 50);
+
+    setTimeout(() => (this.historyState = window.history.state), 50);
     return direction.replace(/state/i, '');
   }
-  
 
   private transitionHandler(event, appName: string, action: 'enter' | 'exit') {
     const direction = this.getDirection(event);
-  
+
     let wrapper = document.querySelector(`[id$="${appName}"]`) as HTMLDivElement;
     if (!wrapper) return null;
     let originWrapper;
-  
+
     /**
      * If first mount.
      * no apply transition effect.
@@ -209,11 +208,11 @@ class SingleSpaTransition {
     /**
      * when if action is `exit`. clone the element.
      */
-  
+
     if (action === 'exit') {
       originWrapper = wrapper;
       wrapper.removeAttribute('class');
-      
+
       wrapper = wrapper.cloneNode(true) as HTMLDivElement;
       wrapper.setAttribute('id', `${wrapper.getAttribute('id')}:exit`);
 
@@ -223,19 +222,19 @@ class SingleSpaTransition {
     /**
      * Scroll
      */
-  
+
     // set position next page position by current page.
     if (direction === 'pop' && action === 'exit') {
       const scrollTop = document.documentElement.scrollTop;
       wrapper.style.top = `-${scrollTop}px`;
       wrapper.style.height = `calc(100vh + ${scrollTop}px)`;
     }
-  
+
     // save `scrollTop`
     if (direction === 'push' && action === 'exit') {
       this.scrollStates[appName] = document.documentElement.scrollTop;
     }
-  
+
     // restore `scrollTop` by saved.
     if (direction === 'pop' && action === 'enter') {
       const scrollTop = this.scrollStates[appName] || 0;
@@ -245,7 +244,6 @@ class SingleSpaTransition {
       }
     }
 
-
     /**
      * Reset and initialize transition class.
      */
@@ -253,11 +251,11 @@ class SingleSpaTransition {
     const resetAndEnter = () => {
       // remove class attribute (for reset)
       wrapper.removeAttribute('class');
-      
+
       // initialize transition.
       wrapper.classList.add(direction);
       wrapper.classList.add(action);
-    }
+    };
 
     /**
      * Active transitions.
@@ -265,10 +263,9 @@ class SingleSpaTransition {
 
     const enterActive = () => {
       window.requestAnimationFrame(() => {
-    
         // start transition.
-        setTimeout(() => wrapper.classList.add(`${action}-active`),1);
-        
+        setTimeout(() => wrapper.classList.add(`${action}-active`), 1);
+
         // reset transiiton.
         setTimeout(() => {
           if (action === 'exit') {
@@ -276,15 +273,15 @@ class SingleSpaTransition {
             wrapper.parentNode?.removeChild(wrapper);
             return;
           }
-    
+
           // if action is `enter`, remove transition classes.
           wrapper.removeAttribute('class');
-    
+
           // scroll to top
           if (direction === 'push' && action === 'enter' && document.documentElement.scrollTop) {
             document.documentElement.scrollTop = 0;
           }
-    
+
           // marked `active` when mounted app.
           if ([MOUNTED, LOAD_ERROR, SKIP_BECAUSE_BROKEN].includes(getAppStatus(appName))) {
             wrapper.classList.add('active');
