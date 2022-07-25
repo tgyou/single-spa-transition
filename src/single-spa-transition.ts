@@ -1,5 +1,6 @@
-import './style.css';
 import { getAppStatus, LOAD_ERROR, MOUNTED, NOT_MOUNTED, SKIP_BECAUSE_BROKEN } from 'single-spa';
+import globalCSS from '!!raw-loader!./global.css';
+import transitionCSS from '!!raw-loader!./transition.css';
 
 const DEFAULT_DURATION = 500; // ms
 const DEFAULT_DELAY = 100; // ms
@@ -13,10 +14,12 @@ interface SingleSpaTransitionStyle {
 }
 
 interface SingleSpaTransitionOptions {
-  duration?: number;
-  delay?: number;
-  style?: SingleSpaTransitionStyle;
-  unmountAfterMount?: boolean;
+  duration?: number; // default: 500
+  delay?: number; // default: 100
+  style?: SingleSpaTransitionStyle; // default: {},
+  unmountAfterMount?: boolean; // default: false
+  injectGlobalStyleSheet?: boolean; // default: true
+  injectStyleSheet?: boolean; // default: true
 }
 
 class SingleSpaTransition {
@@ -35,14 +38,16 @@ class SingleSpaTransition {
   constructor(options?: SingleSpaTransitionOptions) {
     if (typeof window === undefined) return;
 
-    if (options?.duration > -1) this._duration = options.duration;
-    if (options?.delay > -1) this._delay = options.delay;
-    if (options?.style) this._style = options.style;
-    if (options?.unmountAfterMount !== undefined) this.unmountAfterMount = options.unmountAfterMount;
+    const { duration, delay, style, unmountAfterMount, injectGlobalStyleSheet, injectStyleSheet } = options;
+
+    if (duration > -1) this._duration = duration;
+    if (delay > -1) this._delay = delay;
+    if (style) this._style = style;
+    if (unmountAfterMount !== undefined) this.unmountAfterMount = unmountAfterMount;
 
     this.listenSpaEvent();
     this.checkAlreadyMounted();
-    this.createGlobalStyleSheet();
+    this.createStyleSheet(injectGlobalStyleSheet, injectStyleSheet);
 
     const win = window as any;
     if (win.singleSpaTransition) {
@@ -56,7 +61,7 @@ class SingleSpaTransition {
 
   public set duration(duration: number) {
     this._duration = duration;
-    this.updateGlobalStyleSheet();
+    this.updateStyleSheet();
   }
 
   public get duration() {
@@ -65,7 +70,7 @@ class SingleSpaTransition {
 
   public set delay(delay: number) {
     this._delay = delay;
-    this.updateGlobalStyleSheet();
+    this.updateStyleSheet();
   }
 
   public get delay() {
@@ -74,7 +79,7 @@ class SingleSpaTransition {
 
   public set style(style: SingleSpaTransitionStyle) {
     this._style = style;
-    this.updateGlobalStyleSheet();
+    this.updateStyleSheet();
   }
 
   public get style() {
@@ -96,28 +101,34 @@ class SingleSpaTransition {
       }),
     ];
 
-    if (!this._style.top) {
-      const wrapper = document.querySelector('[id^="single-spa-application:"]');
-
-      if (wrapper) {
-        const top = wrapper.getBoundingClientRect().top + document.documentElement.scrollTop;
-        rows.push(`--spa-transition-top: ${top ? top + 'px' : top};`);
-      }
-    }
-
     return `:root { ${rows.join(' ')} }`;
   }
 
-  private createGlobalStyleSheet() {
-    const style = document.createElement('style');
-    style.setAttribute('data-spa-style', 'vars');
-    style.textContent = this.stylesheet;
-    document.querySelector('head').appendChild(style);
+  private createStyleSheet(injectGlobalStyleSheet = true, injectStyleSheet = true) {
+    if (injectGlobalStyleSheet) {
+      const styleGlobal = document.createElement('style');
+      styleGlobal.setAttribute('data-spa-style', 'global');
+      styleGlobal.textContent = globalCSS;
+      document.querySelector('head').appendChild(styleGlobal);
+    }
+
+    const styleVar = document.createElement('style');
+    styleVar.setAttribute('data-spa-style', 'variables');
+    styleVar.textContent = this.stylesheet;
+    document.querySelector('head').appendChild(styleVar);
+
+    if (injectStyleSheet) {
+      const styleTransition = document.createElement('style');
+      styleTransition.setAttribute('data-spa-style', 'transition');
+      styleTransition.textContent = transitionCSS;
+      document.querySelector('head').appendChild(styleTransition);
+    }
+
     this.addRootClassname();
     return this;
   }
 
-  private updateGlobalStyleSheet() {
+  private updateStyleSheet() {
     const style = document.querySelector('style[data-spa-style]');
     style.textContent = this.stylesheet;
     this.addRootClassname();
