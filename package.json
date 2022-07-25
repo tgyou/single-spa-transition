@@ -11,8 +11,8 @@
     "url": "https://github.com/tgyou/single-spa-transition"
   },
   "license": "MIT",
-  "main": "dist/styx-single-spa-transition.js",
-  "types": "dist/styx-single-spa-transition.d.ts",
+  "main": "dist/single-spa-transition.js",
+  "types": "dist/single-spa-transition.d.ts",
   "scripts": {
     "start": "webpack serve",
     "start:standalone": "webpack serve --env standalone",

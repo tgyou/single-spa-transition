@@ -4,7 +4,7 @@ const singleSpaDefaults = require('webpack-config-single-spa-ts');
 
 module.exports = (webpackConfigEnv, argv) => {
   const opts = {
-    orgName: 'styx',
+    orgName: 'tgyou',
     projectName: 'single-spa-transition',
     webpackConfigEnv,
     argv,
