@@ -1,6 +1,6 @@
 {
   "extends": "ts-config-single-spa",
-  "files": ["src/styx-single-spa-transition.ts"],
+  "files": ["src/single-spa-transition.ts"],
   "compilerOptions": {
     "declarationDir": "dist",
     "target": "es5",
