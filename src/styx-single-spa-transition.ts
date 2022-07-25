@@ -1,5 +1,5 @@
 import './style.css';
-import { addErrorHandler, getAppStatus, LOAD_ERROR, MOUNTED, NOT_MOUNTED, SKIP_BECAUSE_BROKEN } from 'single-spa';
+import { getAppStatus, LOAD_ERROR, MOUNTED, NOT_MOUNTED, SKIP_BECAUSE_BROKEN } from 'single-spa';
 
 const DEFAULT_DURATION = 500; // ms
 const DEFAULT_DELAY = 100; // ms
