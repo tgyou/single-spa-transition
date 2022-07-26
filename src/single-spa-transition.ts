@@ -247,11 +247,9 @@ class SingleSpaTransition {
 
     // restore `scrollTop` by saved.
     if (direction === 'pop' && action === 'enter') {
-      const scrollTop = this.scrollStates[appName] || 0;
-      if (scrollTop) {
-        document.documentElement.scrollTop = scrollTop;
-        delete this.scrollStates[appName];
-      }
+      const scrollTop = this.scrollStates[appName];
+      document.documentElement.scrollTop = scrollTop;
+      delete this.scrollStates[appName];
     }
 
     /**
