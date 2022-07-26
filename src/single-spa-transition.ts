@@ -195,7 +195,6 @@ class SingleSpaTransition {
 
     let wrapper = document.querySelector(`[id$="${appName}"]`) as HTMLDivElement;
     if (!wrapper) return null;
-    let originWrapper;
 
     /**
      * If first mount.
@@ -221,7 +220,7 @@ class SingleSpaTransition {
      */
 
     if (action === 'exit') {
-      originWrapper = wrapper;
+      const originWrapper = wrapper;
       wrapper.removeAttribute('class');
 
       wrapper = wrapper.cloneNode(true) as HTMLDivElement;
