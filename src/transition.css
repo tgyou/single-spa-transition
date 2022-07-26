@@ -1,5 +1,5 @@
 .spa-transition [id^='single-spa-application:'] {
-  will-change: transition, box-shadow;
+  will-change: transition, filter;
 }
 
 .spa-transition [id^='single-spa-application:']:not([class]) {
@@ -21,54 +21,62 @@
 
 .spa-transition [id^='single-spa-application:'].push.exit,
 .spa-transition [id^='single-spa-application:'].pop.enter {
-  position: static;
+  position: inherit;
+  width: var(--spa-transition-width, 100vw);
+  height: inherit;
+  min-height: var(--spa-transition-height, 100vh);
 }
 
 .spa-transition [id^='single-spa-application:'].enter-active,
 .spa-transition [id^='single-spa-application:'].exit-active {
   transition: transform cubic-bezier(0.1, 0.7, 0.1, 1) var(--spa-transition-duration, 500ms)
       var(--spa-transition-delay, 100ms),
+    filter cubic-bezier(0.1, 0.7, 0.1, 1) var(--spa-transition-duration, 500ms) var(--spa-transition-delay, 100ms),
     box-shadow cubic-bezier(0.1, 0.7, 0.1, 1) var(--spa-transition-duration, 500ms) var(--spa-transition-delay, 100ms);
 }
 
 .spa-transition [id^='single-spa-application:'].push.enter {
   transform: translate3d(100vw, 0, 0);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
   z-index: 1;
 }
 
 .spa-transition [id^='single-spa-application:'].push.enter-active {
   transform: translate3d(0, 0, 0);
-  box-shadow: 0 0 50px rgba(0, 0, 0, 0.25);
 }
 
 .spa-transition [id^='single-spa-application:'].push.exit {
   transform: translate3d(0, 0, 0);
+  filter: brightness(100%);
+  box-shadow: 0 0 0 50vw rgba(0, 0, 0, 0);
 }
 
 .spa-transition [id^='single-spa-application:'].push.exit-active {
   transform: translate3d(-50vw, 0, 0);
+  filter: brightness(50%);
+  box-shadow: 0 0 0 50vw rgba(0, 0, 0, .5);
 }
 
 /* pop */
 
 .spa-transition [id^='single-spa-application:'].pop.enter {
   transform: translate3d(-50vw, 0, 0);
+  filter: brightness(50%);
+  box-shadow: 0 0 0 50vw rgba(0, 0, 0, .5);
 }
 
 .spa-transition [id^='single-spa-application:'].pop.enter-active {
   transform: translate3d(0, 0, 0);
+  filter: brightness(100%);
+  box-shadow: 0 0 0 50vw rgba(0, 0, 0, 0);
 }
 
 .spa-transition [id^='single-spa-application:'].pop.exit {
   transform: translate3d(0, 0, 0);
-  box-shadow: 0 0 50px rgba(0, 0, 0, 0.25);
   z-index: 1;
 }
 
 .spa-transition [id^='single-spa-application:'].pop.exit-active {
   transform: translate3d(100vw, 0, 0);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
 }
 
 /* replace */
