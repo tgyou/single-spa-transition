@@ -10,15 +10,39 @@ module.exports = (webpackConfigEnv, argv) => {
     argv,
   };
 
-  return merge(singleSpaDefaults(opts), {
-    entry: path.resolve(process.cwd(), `src/${opts.projectName}`),
-    output: {
-      filename: `${opts.projectName}.js`,
-      libraryTarget: 'system',
-      path: path.resolve(process.cwd(), 'dist'),
-      uniqueName: opts.projectName,
-      devtoolNamespace: `${opts.projectName}`,
-      publicPath: '',
-    },
-  });
+  return [
+    merge(singleSpaDefaults(opts), {
+      entry: path.resolve(process.cwd(), `src/${opts.projectName}`),
+      output: {
+        filename: `${opts.projectName}.js`,
+        libraryTarget: 'system',
+        path: path.resolve(process.cwd(), 'lib/system'),
+        uniqueName: opts.projectName,
+        devtoolNamespace: `${opts.projectName}`,
+        publicPath: '',
+      },
+    }),
+    merge(singleSpaDefaults(opts), {
+      entry: path.resolve(process.cwd(), `src/${opts.projectName}`),
+      output: {
+        filename: `${opts.projectName}.js`,
+        libraryTarget: 'umd',
+        path: path.resolve(process.cwd(), 'lib/umd'),
+        uniqueName: opts.projectName,
+        devtoolNamespace: `${opts.projectName}`,
+        publicPath: '',
+      },
+    }),
+    merge(singleSpaDefaults(opts), {
+      entry: path.resolve(process.cwd(), `src/${opts.projectName}`),
+      output: {
+        filename: `${opts.projectName}.cjs`,
+        libraryTarget: 'commonjs',
+        path: path.resolve(process.cwd(), 'lib/cjs'),
+        uniqueName: opts.projectName,
+        devtoolNamespace: `${opts.projectName}`,
+        publicPath: '',
+      },
+    }),
+  ];
 };

@@ -60,6 +60,8 @@ typings/
 # next.js build output
 .next
 dist
+lib
+types
 
 # Editor directories and files
 .idea

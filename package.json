@@ -1,6 +1,6 @@
 {
   "name": "@tgyou/single-spa-transition",
-  "version": "1.0.0",
+  "version": "1.0.1" ,
   "description": "App transition for single-spa root-config",
   "author": {
     "email": "taegyu@gmail.com",
@@ -11,8 +11,23 @@
     "url": "https://github.com/tgyou/single-spa-transition"
   },
   "license": "MIT",
-  "main": "dist/single-spa-transition.js",
-  "types": "dist/single-spa-transition.d.ts",
+  "main": "lib/umd/single-spa-transition.js",
+  "module": "lib/umd/single-spa-transition.js",
+  "types": "types/single-spa-transition.d.ts",
+  "exports": {
+    ".": {
+      "import": "./lib/umd/single-spa-transition.js",
+      "require": "./lib/cjs/single-spa-react.cjs"
+    }
+  },
+  "files": [
+    "lib",
+    "types/single-spa-transition.d.ts",
+    "README.md"
+  ],
+  "tsd": {
+    "directory": "src"
+  },
   "scripts": {
     "start": "webpack serve",
     "start:standalone": "webpack serve --env standalone",

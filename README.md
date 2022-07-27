@@ -7,13 +7,16 @@ Insert this code before active of spa-root.
 
 ```js
 // add this
-System.import('https://styx.im/npm/@tgyou/single-spa-transition@1.0.0/single-spa-transition.js').then(module => {
-  new module.default({
-  // options
-  }; 
+import { start } from 'single-spa';
+import SingleSpaTransition from '@tgyou/single-spa-transition';
 
-  start(); // single-spa start
+...
+new SingleSpaTransition({
+// options
 });
+...
+
+start(); // single-spa start
 ```
 
 ## options (optional)
