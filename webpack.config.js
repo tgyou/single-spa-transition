@@ -1,6 +1,5 @@
-const path = require('path');
-const { merge } = require('webpack-merge');
 const singleSpaDefaults = require('webpack-config-single-spa-ts');
+const createMerge = require('./webpack.merge');
 
 module.exports = (webpackConfigEnv, argv) => {
   const opts = {
@@ -10,39 +9,9 @@ module.exports = (webpackConfigEnv, argv) => {
     argv,
   };
 
-  return [
-    merge(singleSpaDefaults(opts), {
-      entry: path.resolve(process.cwd(), `src/${opts.projectName}`),
-      output: {
-        filename: `${opts.projectName}.js`,
-        libraryTarget: 'system',
-        path: path.resolve(process.cwd(), 'lib/system'),
-        uniqueName: opts.projectName,
-        devtoolNamespace: `${opts.projectName}`,
-        publicPath: '',
-      },
-    }),
-    merge(singleSpaDefaults(opts), {
-      entry: path.resolve(process.cwd(), `src/${opts.projectName}`),
-      output: {
-        filename: `${opts.projectName}.js`,
-        libraryTarget: 'umd',
-        path: path.resolve(process.cwd(), 'lib/umd'),
-        uniqueName: opts.projectName,
-        devtoolNamespace: `${opts.projectName}`,
-        publicPath: '',
-      },
-    }),
-    merge(singleSpaDefaults(opts), {
-      entry: path.resolve(process.cwd(), `src/${opts.projectName}`),
-      output: {
-        filename: `${opts.projectName}.cjs`,
-        libraryTarget: 'commonjs',
-        path: path.resolve(process.cwd(), 'lib/cjs'),
-        uniqueName: opts.projectName,
-        devtoolNamespace: `${opts.projectName}`,
-        publicPath: '',
-      },
-    }),
-  ];
+  const createConfig = createMerge(opts, singleSpaDefaults);
+
+  return webpackConfigEnv.WEBPACK_BUILD && !webpackConfigEnv.analyze
+    ? [createConfig('esm'), createConfig('system'), createConfig('commonjs'), createConfig('umd')]
+    : createConfig('system');
 };

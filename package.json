@@ -1,6 +1,6 @@
 {
   "name": "@tgyou/single-spa-transition",
-  "version": "1.0.1" ,
+  "version": "1.0.2",
   "description": "App transition for single-spa root-config",
   "author": {
     "email": "taegyu@gmail.com",
@@ -12,11 +12,11 @@
   },
   "license": "MIT",
   "main": "lib/umd/single-spa-transition.js",
-  "module": "lib/umd/single-spa-transition.js",
+  "module": "lib/esm/single-spa-transition.js",
   "types": "types/single-spa-transition.d.ts",
   "exports": {
     ".": {
-      "import": "./lib/umd/single-spa-transition.js",
+      "import": "./lib/esm/single-spa-transition.js",
       "require": "./lib/cjs/single-spa-transition.cjs"
     }
   },
@@ -32,7 +32,9 @@
     "start": "webpack serve",
     "start:standalone": "webpack serve --env standalone",
     "build": "concurrently yarn:build:*",
+    "build:clean": "rimraf lib/",
     "build:webpack": "webpack --mode=production",
+    "_build:tsc": "tsc -p tsconfig-esm.json",
     "analyze": "webpack --mode=production --env analyze",
     "lint": "eslint src --ext js,ts,tsx",
     "format": "prettier --write .",
@@ -66,6 +68,7 @@
     "prettier": "^2.7.1",
     "pretty-quick": "^3.1.1",
     "raw-loader": "^4.0.2",
+    "rimraf": "^3.0.2",
     "ts-config-single-spa": "^3.0.0",
     "typescript": "^4.3.5",
     "webpack": "^5.51.1",
