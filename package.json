@@ -17,7 +17,7 @@
   "exports": {
     ".": {
       "import": "./lib/umd/single-spa-transition.js",
-      "require": "./lib/cjs/single-spa-react.cjs"
+      "require": "./lib/cjs/single-spa-transition.cjs"
     }
   },
   "files": [
