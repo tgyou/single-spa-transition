@@ -5,6 +5,11 @@
 .spa-transition [id^='single-spa-application:']:not([class]) {
   visibility: hidden;
   position: absolute;
+  z-index: 1;
+  top: var(--spa-transition-top, 0);
+  left: var(--spa-transition-left, 0);
+  width: var(--spa-transition-width, 100vw);
+  height: var(--spa-transition-height, 100vh);
 }
 
 .spa-transition [id^='single-spa-application:'].enter,

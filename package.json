@@ -1,6 +1,6 @@
 {
   "name": "@tgyou/single-spa-transition",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "App transition for single-spa root-config",
   "author": {
     "email": "taegyu@gmail.com",
